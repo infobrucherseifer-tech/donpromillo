@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dart Club Don Promillo - Kassenbuch</title>
+    
+    <!-- PWA / App-Icon Einbindung -->
+    <meta name="theme-color" content="#e51b24">
+    <link rel="icon" type="image/jpeg" href="1000003770.jpg">
+    <link rel="apple-touch-icon" href="1000003770.jpg">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Dart Club Don Promillo</h1>
+            <h2>Kassenbuch & Finanzreport</h2>
+        </header>
+
+        <!-- Dashboard -->
+        <div class="dashboard">
+            <div class="card">
+                <h3>Einnahmen</h3>
+                <p id="total-income" class="amount income">0,00 €</p>
+            </div>
+            <div class="card">
+                <h3>Ausgaben</h3>
+                <p id="total-expense" class="amount expense">0,00 €</p>
+            </div>
+            <div class="card highlight">
+                <h3>Aktueller Kontostand</h3>
+                <p id="net-balance" class="amount">0,00 €</p>
+            </div>
+        </div>
+
+        <!-- Daten-Aktionen & Buchungsformular -->
+        <div class="action-grid no-print">
+            <!-- Formular -->
+            <section class="form-section">
+                <h3>Neue Buchung hinzufügen</h3>
+                <form id="transaction-form">
+                    <div class="form-group">
+                        <label for="date">Datum:</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Beschreibung:</label>
+                        <input type="text" id="description" placeholder="z.B. Mitgliedsbeitrag, Dartpfeile" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Typ:</label>
+                        <select id="type" required>
+                            <option value="income">Einnahme (+)</option>
+                            <option value="expense">Ausgabe (-)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Betrag in €:</label>
+                        <input type="number" id="amount" step="0.01" min="0.01" placeholder="0,00" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Buchung speichern</button>
+                </form>
+            </section>
+
+            <!-- JSON & Druck Steuerung -->
+            <section class="storage-section">
+                <h3>Daten & Berichte</h3>
+                <p class="info-text">Geladene JSON-Dateien schreiben die Liste fort und hängen neue Einträge hinten an.</p>
+                <div class="btn-group-vertical">
+                    <button id="btn-export" class="btn btn-success">💾 Kassenbuch als JSON speichern</button>
+                    
+                    <label for="btn-import" class="btn btn-file">
+                        📂 JSON laden & fortschreiben
+                    </label>
+                    <input type="file" id="btn-import" accept=".json" style="display:none;">
+                    
+                    <button id="btn-print" class="btn btn-secondary">🖨️ Report drucken / PDF</button>
+                    <button id="btn-clear" class="btn btn-danger">🗑️ Ansicht leeren</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Tabelle / Historie -->
+        <section class="table-section">
+            <h3 class="print-title">📋 Kassenberichte - Transaktionshistorie</h3>
+            <div class="table-responsive">
+                <table id="transaction-table">
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Beschreibung</th>
+                            <th>Typ</th>
+                            <th class="text-right">Betrag</th>
+                            <th class="no-print">Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transaction-list">
+                        <!-- Dynamischer Inhalt -->
+                    </tbody>
+                </table>
+            </div>
+            <p id="empty-state" class="empty-state">Keine Buchungen vorhanden. Lade eine JSON-Datei oder erstelle einen neuen Eintrag.</p>
+        </section>
+    </div>
+    <script src="js/script.js"></script>
+    
+    <!-- Service Worker Registrierung -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker erfolgreich registriert:', reg.scope))
+            .catch(err => console.error('Service Worker Fehler:', err));
+        });
+      }
+    </script>
+</body>
+
+</body>
+</html>
